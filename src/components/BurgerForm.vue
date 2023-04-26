@@ -5,21 +5,21 @@
     
         
         <form id="form-burg" @submit="createBurger">
-            <p id="msg">{{ msg }}</p>
+            <Message :msg="msg" v-show="msg" />
             <div class="input-container">
                 <label for="nome">Nome do cliente: </label>
-                <input type="text" v-model="nome" placeholder="Digite o seu nome">
+                <input class="border border-slate-400" type="text" v-model="nome" placeholder="Digite o seu nome">
             </div>
             <div class="input-container">
                 <label for="pao">Escolhe o pão: </label>
-                <select name="pao" v-model="pao" id="pao">
+                <select class="border border-slate-400" name="pao" v-model="pao" id="pao">
                     <option value="">Escolhe seu pão</option>
                     <option v-for="pao in paes" :key="pao.id" :value="pao.tipo"> {{ pao.tipo }}</option>
                 </select>
             </div>
             <div class="input-container">
                 <label for="carne">Escolhe a carne do seu Burger: </label>
-                <select name="carne" v-model="carne" id="carne">
+                <select class="border border-slate-400" name="carne" v-model="carne" id="carne">
                     <option value="">Escolhe o tipo de carne</option>
                     <option v-for="carne in carnes" :key="carne.id" :value="carne.tipo"> {{ carne.tipo }} </option>
                 </select>
@@ -41,9 +41,14 @@
 </template>
 
 <script>
-
+import Message from './Message.vue'
+    
     export default {
         name: 'BurgerForm',
+
+        components: {
+            Message
+        },
 
         data() {
             return {
@@ -90,22 +95,29 @@
                     body: dataJson
                 });
 
-                this.msg = "Burger Criado com sucesso !!"
-                console.log(data)
+                const res = await req.json();
+
+                console.log(res)
+
+                this.msg = `Pedido N ${res.id} realizado com sucesso !!`;
+
+                setTimeout(() => this.msg = "", 3000);
 
                 //deixando os campos vazios depois de submit
 
                 this.nome = "";
                 this.carne = "";
                 this.pao = "";
-                this.opcionais = ""
+                this.opcionais = "";
 
             }
+
         },
 
         mounted() {
            this.getIngredientes()
-        },
+
+        }
     }
 
 </script>
